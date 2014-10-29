@@ -27,21 +27,31 @@ class Leitura{
     style_botao=dados['style_botao'];
     fases_jogo=dados['fases_jogo'];
   }
-}
+  static Future leSons(){
+    backgoundsound = new Sound( soundUrl: "./resources/music/somjogo.wav" );
+    correctSound = new Sound( soundUrl: "./resources/music/correct.wav" );
+    errorSound = new Sound( soundUrl: "./resources/music/error.wav" );
+    gameoverSound = new Sound( soundUrl: "./resources/music/gameover.wav" );
 
-Sound backgoundsound = new Sound( soundUrl: "resources/music/somjogo.wav" );
-Sound correctSound = new Sound( soundUrl: "resources/music/correct.wav" );
-Sound errorSound = new Sound( soundUrl: "resources/music/error.wav" );
-Sound gameoverSound = new Sound( soundUrl: "resources/music/gameover.wav" );
+    return Future.wait([backgoundsound.onLoad,backgoundsound.onLoad, errorSound.onLoad, gameoverSound.onLoad]);
+  }
+}
+//Variaveis globais são evil.
+Sound backgoundsound;
+Sound correctSound;
+Sound errorSound;
+Sound gameoverSound;
+
 void main() {
-    backgoundsound.onLoad.then((_) => backgoundsound.play( looping: true ));
-    Leitura.lendoDados();
-    
+  Future.wait([Leitura.leSons(),Leitura.lendoDados()]).then((_){
+    backgoundsound.play( looping: true );
+
     botao_0 = querySelector('#botao0');
     botao_1 = querySelector('#botao1');
     botao_2 = querySelector('#botao2');
     botao_0.style.display = botao_1.style.display = botao_2.style.display = 'none';
     querySelector('#continue').onClick.listen(geraPagina);
+  });
 }
 
 void mostraBotao(int j,int n){
@@ -100,7 +110,7 @@ void valor(Event e){
   String valor = (e.target as ButtonElement).value;
   if(valor=="0"){
     corretos++;
-    correctSound.onLoad.then((_) => correctSound.play());
+    correctSound.play();
     i=i+3;
     fase_atual++;
     if(fase_atual >= maximoFases){
@@ -111,11 +121,11 @@ void valor(Event e){
   else{
     vidas--;
     if(vidas >= 0)
-      errorSound.onLoad.then((_) => errorSound.play());
+      errorSound.play();
     else{
-      gameoverSound.onLoad.then((_) => gameoverSound.play());
+      gameoverSound.play();
       gameOverPage();
     }
-      
+
   }
 }
