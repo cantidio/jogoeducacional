@@ -1,8 +1,7 @@
 name: jogo1backup
 description: A sample web application
+environment:
+  sdk: '>=1.5.2'
 dependencies:
   browser: any
-  gorgon:
-    '>=0.14.0'
-  simple_audio:
-    git: https://github.com/johnmccutchan/simpleaudio.git
+  gorgon: any
